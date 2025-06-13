@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router";
+import { Button } from "@/components/ui/button";
 
 export const PrivateLayout = () => {
   return (
@@ -8,14 +9,14 @@ export const PrivateLayout = () => {
         <div>
         RETO-BLOCKCHAIN
         </div>
-        <button
+        <Button
           onClick={() => {
             localStorage.removeItem("user");
             window.location.href = "/login";
           }}
         >
           Cerrar sesión
-        </button>
+        </Button>
       </div>
       <div className="mex-w-screen min-h-[95vh] bg-blue-100 py-10 px-40">
         <Outlet />
