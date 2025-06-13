@@ -7,7 +7,7 @@ export const HomePage = () => {
   const { name } = JSON.parse(user)
 
   return (
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6">
+      <div className=" mx-auto bg-white rounded-2xl shadow-lg p-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
           Bienvenido, {name} <span className="text-blue-500">🚀</span>
         </h1>
