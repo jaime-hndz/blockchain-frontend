@@ -1,12 +1,14 @@
 import React from 'react'
+import { useSurveyContext } from '../../context/SurveyContext';
+import { BasicSurveyButton } from './BasicSurveyButton';
 
-export const NewSurvey = ({setSurveys}) => {
+export const NewSurvey = () => {
+
+  const {addSurvey} = useSurveyContext();
   return (
-    <div>
+    <BasicSurveyButton newButton>
       <button
-        onClick={() => {
-          setSurveys((prev) => [...prev, prev.length + 1]);
-        }} >nueva encuesta</button>
-    </div>
+        onClick={() => {addSurvey()}} >Nueva encuesta</button>
+    </BasicSurveyButton>
   )
 }
