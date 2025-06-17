@@ -3,24 +3,16 @@ import { BasicSurveyButton } from "./BasicSurveyButton";
 import { useSurveyContext } from "../../context/SurveyContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SurveyForm } from "./SurveyForm";
 
-export const Survey = ({ name }) => {
+export const Survey = ({ survey }) => {
   const { removeSurvey } = useSurveyContext();
   return (
     <BasicSurveyButton
-      closeButton={() => removeSurvey(name - 1)}
-      name={`Encuesta ${name}`}
+      closeButton={() => removeSurvey(survey.id)}
+      name={survey.name}
     >
-      <div className="grid gap-4">
-        <div className="grid gap-3">
-          <Label htmlFor="name-1">Name</Label>
-          <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-        </div>
-        <div className="grid gap-3">
-          <Label htmlFor="username-1">Username</Label>
-          <Input id="username-1" name="username" defaultValue="@peduarte" />
-        </div>
-      </div>
+      <SurveyForm survey={survey} />
     </BasicSurveyButton>
   );
 };
