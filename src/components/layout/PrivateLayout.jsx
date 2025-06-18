@@ -12,6 +12,7 @@ export const PrivateLayout = () => {
         <Button
           onClick={() => {
             localStorage.removeItem("user");
+            localStorage.removeItem("admin");
             window.location.href = "/login";
           }}
         >

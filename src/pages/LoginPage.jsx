@@ -1,25 +1,58 @@
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 
 export const LoginPage = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = () => {
+    if (!name.trim()) {
+      setError('Por favor, ingresa tu nombre');
+      return;
+    }
+
+    if(name === 'admin'){
+      localStorage.setItem('admin', JSON.stringify(true));
+    }
+    localStorage.setItem('user', JSON.stringify({ name }));
+    window.location.href = '/';
+  };
+
   return (
     <div className="bg-gradient-to-br from-blue-500 to-indigo-600 h-screen flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm space-y-6">
         <h2 className="text-2xl font-bold text-gray-800 text-center">Iniciar sesión</h2>
-        
+
         <div className="space-y-4">
-          <Input placeholder="Correo electrónico" type="email" className="w-full" />
-          <Input placeholder="Contraseña" type="password" className="w-full" />
+          <Input
+            placeholder="Nombre"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full"
+          />
+          <Input
+            placeholder="Correo electrónico"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full"
+          />
+          <Input
+            placeholder="Contraseña"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full"
+          />
         </div>
 
-        <Button
-          className="w-full"
-          onClick={() => {
-            localStorage.setItem('user', JSON.stringify({ name: 'jaime' }));
-            window.location.href = '/';
-          }}
-        >
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+        <Button className="w-full" onClick={handleLogin}>
           Iniciar sesión
         </Button>
       </div>

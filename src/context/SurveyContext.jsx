@@ -8,8 +8,8 @@ export const SurveyContextProvider = ({ children }) => {
       id: 1,
       name: "Encuesta 1",
       candidates: [
-        { id: 11231, name: "Candidato 1", votes: 0 },
-        { id: 11221, name: "Candidato 2", votes: 0 },
+        { id: 11231, name: "Candidato 1", votes: 0, selected: false },
+        { id: 11221, name: "Candidato 2", votes: 0, selected: false },
       ],
       starts: 0,
       ends: 0,
@@ -20,8 +20,8 @@ export const SurveyContextProvider = ({ children }) => {
       id: 2,
       name: "Encuesta 2",
       candidates: [
-        { id: 11231, name: "Candidato Y", votes: 0 },
-        { id: 11221, name: "Candidato X", votes: 0 },
+        { id: 11231, name: "Candidato Y", votes: 0, selected: false },
+        { id: 11221, name: "Candidato X", votes: 0, selected: false },
       ],
       starts: 0,
       ends: 0,
@@ -32,8 +32,8 @@ export const SurveyContextProvider = ({ children }) => {
       id: 3,
       name: "Encuesta 3",
       candidates: [
-        { id: 11231, name: "Candidato A", votes: 0 },
-        { id: 11221, name: "Candidato B", votes: 0 },
+        { id: 11231, name: "Candidato A", votes: 0, selected: false },
+        { id: 11221, name: "Candidato B", votes: 0, selected: false },
       ],
       starts: 0,
       ends: 0,
@@ -46,8 +46,8 @@ export const SurveyContextProvider = ({ children }) => {
     id: Date.now(),
     name: "",
     candidates: [
-      { id: Date.now() + 1, name: "", votes: 0 },
-      { id: Date.now() + 2, name: "", votes: 0 },
+      { id: Date.now() + 1, name: "", votes: 0, selected: false },
+      { id: Date.now() + 2, name: "", votes: 0 , selected: false },
     ],
     starts: 0,
     ends: 0,

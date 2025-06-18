@@ -4,6 +4,7 @@ import { useSurveyContext } from "../../context/SurveyContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SurveyForm } from "./SurveyForm";
+import { admin } from "@/helpers/UserProvider";
 
 export const Survey = ({ survey }) => {
   const { removeSurvey } = useSurveyContext();
@@ -12,7 +13,7 @@ export const Survey = ({ survey }) => {
       closeButton={() => removeSurvey(survey.id)}
       name={survey.name}
     >
-      <SurveyForm survey={survey} />
+      <SurveyForm survey={survey} admin={admin} />
     </BasicSurveyButton>
   );
 };

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { useSurveyContext } from "@/context/SurveyContext";
 
-export const SurveyForm = ({ survey }) => {
+export const SurveyForm = ({ survey, admin }) => {
   const { setCurrentSurvey } = useSurveyContext();
   const [candidates, setCandidates] = React.useState([]);
 
@@ -19,77 +19,104 @@ export const SurveyForm = ({ survey }) => {
 
   return (
     <div className="grid gap-4">
-      <div className="grid gap-3">
-        <Label htmlFor="name-1">Nombre</Label>
-        <Input
-          id="name-1"
-          name="name"
-          defaultValue={survey.name}
-          onChange={(e) => {
-            setCurrentSurvey((prev) => ({
-              ...prev,
-              name: e.target.value,
-            }));
-          }}
-          disabled={survey.opened}
-        />
-      </div>
+      {admin && (
+        <div className="grid gap-3">
+          <Label htmlFor="name-1">Nombre</Label>
+          <Input
+            id="name-1"
+            name="name"
+            defaultValue={survey.name}
+            onChange={(e) => {
+              setCurrentSurvey((prev) => ({
+                ...prev,
+                name: e.target.value,
+              }));
+            }}
+            disabled={survey.opened}
+          />
+        </div>
+      )}
       <h1 className="text-xl font-bold text-gray-800">Candidatos</h1>
       <Separator className="" />
-      {candidates.map((c, index) => (
-        <div key={c.id} className="grid gap-3">
-          <div className="flex items-center gap-2">
-            <Input
+      {candidates.map((c, index) =>
+        admin ? (
+          <div key={c.id} className="grid gap-3">
+            <div className="flex items-center gap-2">
+              <Input
+                id={`candidate-${c.id + 1}`}
+                placeholder={`Candidato ${index + 1}`}
+                name={`candidate-${c.id + 1}`}
+                defaultValue={c.name}
+                onChange={(e) => {
+                  setCandidates((prev) =>
+                    prev.map((candidate) =>
+                      candidate.id === c.id
+                        ? { ...candidate, name: e.target.value }
+                        : candidate
+                    )
+                  );
+                  setCurrentSurvey((prev) => ({
+                    ...prev,
+                    candidates: prev.candidates.map((candidate) =>
+                      candidate.id === c.id
+                        ? { ...candidate, name: e.target.value }
+                        : candidate
+                    ),
+                  }));
+                }}
+                disabled={survey.opened}
+              />
+              {survey.opened ? (
+                <span>{c.votes}</span>
+              ) : (
+                candidates.length > 2 && (
+                  <Button
+                    onClick={() => {
+                      const updatedCandidates = candidates.filter(
+                        (candidate) => candidate.id !== c.id
+                      );
+                      setCandidates([...updatedCandidates]);
+                      setCurrentSurvey((prev) => ({
+                        ...prev,
+                        candidates: updatedCandidates,
+                      }));
+                    }}
+                    variant={"ghost"}
+                    disabled={survey.opened}
+                  >
+                    x
+                  </Button>
+                )
+              )}
+            </div>
+          </div>
+        ) : (
+          <div key={c.id} className="grid gap-2">
+            <Button
+              className={c.selected ? 'bg-red-500 hover:bg-red-500' : 'bg-gray-400 hover:bg-gray-200'}
               id={`candidate-${c.id + 1}`}
-              placeholder={`Candidato ${index + 1}`}
               name={`candidate-${c.id + 1}`}
-              defaultValue={c.name}
-              onChange={(e) => {
-                setCandidates((prev) =>
-                  prev.map((candidate) =>
-                    candidate.id === c.id
-                      ? { ...candidate, name: e.target.value }
-                      : candidate
-                  )
-                );
+              onClick={() => {
                 setCurrentSurvey((prev) => ({
                   ...prev,
-                  candidates: prev.candidates.map((candidate) =>
-                    candidate.id === c.id
-                      ? { ...candidate, name: e.target.value }
-                      : candidate
+                  candidates: prev.candidates.map((candidate) => {
+                    return { ...candidate, selected: candidate.id === c.id }
+                  }
                   ),
                 }));
+                setCandidates((prev) =>
+                  prev.map((candidate) => ({
+                    ...candidate,
+                    selected: candidate.id === c.id,
+                  }))
+                );
               }}
-              disabled={survey.opened}
-            />
-            {survey.opened ? (
-              <span>{c.votes}</span>
-            ) : (
-              candidates.length > 2 && (
-                <Button
-                  onClick={() => {
-                    const updatedCandidates = candidates.filter(
-                      (candidate) => candidate.id !== c.id
-                    );
-                    setCandidates([...updatedCandidates]);
-                    setCurrentSurvey((prev) => ({
-                      ...prev,
-                      candidates: updatedCandidates,
-                    }));
-                  }}
-                  variant={"ghost"}
-                  disabled={survey.opened}
-                >
-                  x
-                </Button>
-              )
-            )}
+            >{c.name}</Button>
           </div>
-        </div>
-      ))}
+        )
+      )}
 
-      {!survey.opened && (
+      {!survey.opened && admin && (
         <>
           <Button
             onClick={() => {

@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "@mynaui/icons-react";
 import { useSurveyContext } from "@/context/SurveyContext";
+import { admin } from "@/helpers/UserProvider";
 
 export const BasicSurveyButton = ({
   name,
   children,
-  closeButton,
+  // closeButton,
   newButton = false,
 }) => {
   const { saveChanges, openAndSave, resetCurrentSurvey, currentSurvey } =
@@ -31,11 +32,11 @@ export const BasicSurveyButton = ({
       <Dialog onOpenChange={() => resetCurrentSurvey()}>
         <DialogTrigger asChild>
           <div className={newButton ? basicStyleNew : basicStyle}>
-            {!newButton ? (
+            {/* {!newButton ? (
               <div onClick={closeButton} className=" absolute top-0 right-3">
                 x
               </div>
-            ) : null}
+            ) : null} */}
             {newButton ? (
               <div className="text-xl font-bold  flex items-center justify-center h-full">
                 <Plus />
@@ -55,7 +56,7 @@ export const BasicSurveyButton = ({
             <DialogClose asChild>
               <div className="flex gap-2 justify-end">
                 <Button variant="outline">Cancelar</Button>
-                {!currentSurvey.opened && currentSurvey.created && (
+                {!currentSurvey.opened && currentSurvey.created && admin && (
                   <Button
                     onClick={openAndSave}
                   >

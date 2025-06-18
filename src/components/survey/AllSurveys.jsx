@@ -3,6 +3,7 @@ import { Survey } from './Survey'
 import { NewSurvey } from './NewSurvey'
 import { useSurveyContext } from '../../context/SurveyContext'
 import { Button } from '../ui/button'
+import { admin } from '@/helpers/UserProvider'
 
 export const AllSurveys = () => {
 
@@ -12,7 +13,7 @@ export const AllSurveys = () => {
     <div>
       <div>Encuestas: </div>
       <div className='grid grid-cols-4 gap-4'>
-      <NewSurvey />
+      {admin && <NewSurvey />}
       {surveys.map((survey) => (<Survey survey={survey} key={survey.id} />))}
       </div>
 
