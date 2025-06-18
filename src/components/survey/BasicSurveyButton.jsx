@@ -20,8 +20,8 @@ export const BasicSurveyButton = ({
   closeButton,
   newButton = false,
 }) => {
-
-  const { saveChanges, resetCurrentSurvey} = useSurveyContext();
+  const { saveChanges, openAndSave, resetCurrentSurvey, currentSurvey } =
+    useSurveyContext();
   const basicStyle =
     "h-30 bg-green-400 relative p-4 rounded-lg hover:bg-green-500 transition-all duration-300 cursor-pointer";
   const basicStyleNew =
@@ -29,33 +29,46 @@ export const BasicSurveyButton = ({
   return (
     <>
       <Dialog onOpenChange={() => resetCurrentSurvey()}>
-          <DialogTrigger asChild>
-            <div className={newButton ? basicStyleNew : basicStyle}>
-              {!newButton ? (
-                <div onClick={closeButton} className=" absolute top-0 right-3">
-                  x
-                </div>
-              ) : null}
-              {newButton ? <div className='text-xl font-bold  flex items-center justify-center h-full'><Plus /></div> : <div>{`${name}`}</div>}
-            </div>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>{name}</DialogTitle>
-              <DialogDescription>
-
-              </DialogDescription>
-            </DialogHeader>
-            {children}
-            <DialogFooter>
-              <DialogClose asChild>
-                <div>
+        <DialogTrigger asChild>
+          <div className={newButton ? basicStyleNew : basicStyle}>
+            {!newButton ? (
+              <div onClick={closeButton} className=" absolute top-0 right-3">
+                x
+              </div>
+            ) : null}
+            {newButton ? (
+              <div className="text-xl font-bold  flex items-center justify-center h-full">
+                <Plus />
+              </div>
+            ) : (
+              <div>{`${name}`}</div>
+            )}
+          </div>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{name}</DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+          {children}
+          <DialogFooter>
+            <DialogClose asChild>
+              <div className="flex gap-2 justify-end">
                 <Button variant="outline">Cancelar</Button>
-                <Button onClick={saveChanges} type="submit">Guardar cambios!</Button>
-                </div>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
+                {!currentSurvey.opened && currentSurvey.created && (
+                  <Button
+                    onClick={openAndSave}
+                  >
+                    Abrir encuesta
+                  </Button>
+                )}
+                <Button onClick={saveChanges} type="submit">
+                  Guardar cambios!
+                </Button>
+              </div>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
       </Dialog>
     </>
   );

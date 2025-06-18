@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { useSurveyContext } from "@/context/SurveyContext";
 
-export const SurveyForm = ({ survey}) => {
+export const SurveyForm = ({ survey }) => {
   const { setCurrentSurvey } = useSurveyContext();
   const [candidates, setCandidates] = React.useState([]);
 
@@ -31,6 +31,7 @@ export const SurveyForm = ({ survey}) => {
               name: e.target.value,
             }));
           }}
+          disabled={survey.opened}
         />
       </div>
       <h1 className="text-xl font-bold text-gray-800">Candidatos</h1>
@@ -60,42 +61,50 @@ export const SurveyForm = ({ survey}) => {
                   ),
                 }));
               }}
+              disabled={survey.opened}
             />
-            {candidates.length > 2 && (
-              <Button
-                onClick={() => {
-
-                  const updatedCandidates = candidates.filter((candidate) => candidate.id !== c.id)
-                  setCandidates([...updatedCandidates])
-                  setCurrentSurvey((prev) => ({
-                    ...prev,
-                    candidates: updatedCandidates,
-                  }));
-                }}
-                variant={"ghost"}
-              >
-                x
-              </Button>
+            {survey.opened ? (
+              <span>{c.votes}</span>
+            ) : (
+              candidates.length > 2 && (
+                <Button
+                  onClick={() => {
+                    const updatedCandidates = candidates.filter(
+                      (candidate) => candidate.id !== c.id
+                    );
+                    setCandidates([...updatedCandidates]);
+                    setCurrentSurvey((prev) => ({
+                      ...prev,
+                      candidates: updatedCandidates,
+                    }));
+                  }}
+                  variant={"ghost"}
+                  disabled={survey.opened}
+                >
+                  x
+                </Button>
+              )
             )}
           </div>
         </div>
       ))}
-      <Button
-        onClick={() => {
 
-          const newCandidate = { id: Date.now(), name: "", votes: 0 };
-          setCurrentSurvey((prev) => ({
-            ...prev,
-            candidates: [
-              ...prev.candidates,
-              newCandidate,
-            ],
-          }));
-          setCandidates((prev) => [...prev, newCandidate]);
-        }}
-      >
-        +
-      </Button>
+      {!survey.opened && (
+        <>
+          <Button
+            onClick={() => {
+              const newCandidate = { id: Date.now(), name: "", votes: 0 };
+              setCurrentSurvey((prev) => ({
+                ...prev,
+                candidates: [...prev.candidates, newCandidate],
+              }));
+              setCandidates((prev) => [...prev, newCandidate]);
+            }}
+          >
+            +
+          </Button>
+        </>
+      )}
     </div>
   );
 };

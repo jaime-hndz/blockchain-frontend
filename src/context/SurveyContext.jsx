@@ -13,6 +13,8 @@ export const SurveyContextProvider = ({ children }) => {
       ],
       starts: 0,
       ends: 0,
+      opened: true,
+      created: true,
     },
     {
       id: 2,
@@ -23,6 +25,8 @@ export const SurveyContextProvider = ({ children }) => {
       ],
       starts: 0,
       ends: 0,
+      opened: false,
+      created: true,
     },
     {
       id: 3,
@@ -33,6 +37,8 @@ export const SurveyContextProvider = ({ children }) => {
       ],
       starts: 0,
       ends: 0,
+      opened: false,
+      created: true,
     },
   ]);
 
@@ -40,35 +46,52 @@ export const SurveyContextProvider = ({ children }) => {
     id: Date.now(),
     name: "",
     candidates: [
-      { id: Date.now()+1, name: "", votes: 0 },
-      { id: Date.now()+2, name: "", votes: 0 },
+      { id: Date.now() + 1, name: "", votes: 0 },
+      { id: Date.now() + 2, name: "", votes: 0 },
     ],
     starts: 0,
     ends: 0,
+    opened: false,
   });
 
-  const saveChanges = () => {
-    setSurveys([...surveys.map(s => {
-      if (s.id === currentSurvey.id) {
-        return currentSurvey;
-      }
-      return s;
-    })])
 
-  };
+  const updateSurvey = (extraFields = {}) => {
+  const exists = surveys.some((s) => s.id === currentSurvey.id);
 
-    const resetCurrentSurvey = () => {
-      setCurrentSurvey({
-        id: Date.now(),
-        name: "",
-        candidates: [
-          { id: Date.now()+1, name: "", votes: 0 },
-          { id: Date.now()+2, name: "", votes: 0 },
-        ],
-        starts: 0,
-        ends: 0,
-      });
+  if (exists) {
+    setSurveys(
+      surveys.map((s) =>
+        s.id === currentSurvey.id ? { ...currentSurvey, ...extraFields } : s
+      )
+    );
+  } else {
+    setSurveys([
+      ...surveys,
+      { ...currentSurvey, created: true, ...extraFields },
+    ]);
+  }
+};
 
+const saveChanges = () => {
+  updateSurvey();
+};
+
+const openAndSave = () => {
+  updateSurvey({ opened: true });
+};
+  const resetCurrentSurvey = () => {
+    setCurrentSurvey({
+      id: Date.now(),
+      name: "",
+      candidates: [
+        { id: Date.now() + 1, name: "", votes: 0 },
+        { id: Date.now() + 2, name: "", votes: 0 },
+      ],
+      starts: 0,
+      ends: 0,
+      opened: false,
+      created: false,
+    });
   };
 
   const addSurvey = () => {
@@ -88,7 +111,8 @@ export const SurveyContextProvider = ({ children }) => {
         currentSurvey,
         setCurrentSurvey,
         saveChanges,
-        resetCurrentSurvey
+        resetCurrentSurvey,
+        openAndSave,
       }}
     >
       {children}
