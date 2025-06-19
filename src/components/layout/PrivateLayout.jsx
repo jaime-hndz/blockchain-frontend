@@ -1,13 +1,13 @@
 import React from "react";
 import { Outlet } from "react-router";
 import { Button } from "@/components/ui/button";
-
+import logo from "@/assets/logo.svg"; 
 export const PrivateLayout = () => {
   return (
     <>
       <div className="max-w-screen h-[5vh] bg-indigo-900 text-white flex justify-between items-center px-10">
         <div>
-        RETO-BLOCKCHAIN
+          <img src={logo} alt="Logo" className="h-35 w-35" />
         </div>
         <Button
           size={"sm"}
