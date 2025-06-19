@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Survey } from './Survey'
 import { NewSurvey } from './NewSurvey'
 import { useSurveyContext } from '../../context/SurveyContext'
@@ -6,6 +6,10 @@ import { Button } from '../ui/button'
 import { admin } from '@/helpers/UserProvider'
 
 export const AllSurveys = () => {
+
+  useEffect(() => {
+    /* aqui va un fetch */
+  }, []);
 
   const { surveys} = useSurveyContext();
   

@@ -9,6 +9,8 @@ export const LoginPage = () => {
   const [error, setError] = useState('');
 
   const handleLogin = () => {
+
+    /* aqui va un fetch */
     if (!name.trim()) {
       setError('Por favor, ingresa tu nombre');
       return;

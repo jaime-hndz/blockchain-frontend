@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const surveyContext = React.createContext({});
 
 export const SurveyContextProvider = ({ children }) => {
+  
   const [surveys, setSurveys] = useState([
     {
       id: 1,
@@ -54,8 +55,13 @@ export const SurveyContextProvider = ({ children }) => {
     opened: false,
   });
 
+  useEffect(() => {
+    // aqui va un fetch
+  }, [])
+  
 
   const updateSurvey = (extraFields = {}) => {
+    // aqui va un fetch
   const exists = surveys.some((s) => s.id === currentSurvey.id);
 
   if (exists) {
