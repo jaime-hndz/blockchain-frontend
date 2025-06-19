@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import logo from "@/assets/logo.svg"; 
 
 export const LoginPage = () => {
   const [name, setName] = useState('');
@@ -26,6 +27,7 @@ export const LoginPage = () => {
   return (
     <div className="bg-gradient-to-br from-blue-500 to-indigo-600 h-screen flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm space-y-6">
+        <img src={logo} alt="Logo" className="w-48 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-800 text-center">Iniciar sesión</h2>
 
         <div className="space-y-4">
