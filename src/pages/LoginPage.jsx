@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import logo from "@/assets/logo.svg"; 
+import { fetchAPI } from '@/helpers/fetch';
+const TESTING = import.meta.env.VITE_TESTING === 'true'
 
 export const LoginPage = () => {
   const [name, setName] = useState('');
@@ -9,20 +11,30 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
+const handleLogin = async () => {
+  if (!name.trim()) {
+    setError('Por favor, ingresa tu nombre');
+    return;
+  }
 
-    /* aqui va un fetch */
-    if (!name.trim()) {
-      setError('Por favor, ingresa tu nombre');
-      return;
+  try {
+    if (!TESTING) {
+      // eslint-disable-next-line no-unused-vars
+      const response = await fetchAPI('/login', { name }, 'POST');
     }
 
-    if(name === 'admin'){
+    if (name === 'admin') {
       localStorage.setItem('admin', JSON.stringify(true));
     }
+
     localStorage.setItem('user', JSON.stringify({ name }));
+
     window.location.href = '/';
-  };
+  } catch (error) {
+    console.error('Error en el login:', error);
+    setError('Error al iniciar sesión. Verifica tu conexión o tus credenciales.');
+  }
+};
 
   return (
     <div className="bg-gradient-to-br from-blue-500 to-indigo-600 h-screen flex items-center justify-center">

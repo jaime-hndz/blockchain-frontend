@@ -1,47 +1,12 @@
+import { fetchAPI } from "@/helpers/fetch";
 import React, { useContext, useEffect, useState } from "react";
+const TESTING = import.meta.env.VITE_TESTING === 'true'
 
 const surveyContext = React.createContext({});
 
 export const SurveyContextProvider = ({ children }) => {
   
-  const [surveys, setSurveys] = useState([
-    {
-      id: 1,
-      name: "Encuesta 1",
-      candidates: [
-        { id: 11231, name: "Candidato 1", votes: 0, selected: false },
-        { id: 11221, name: "Candidato 2", votes: 0, selected: false },
-      ],
-      starts: 0,
-      ends: 0,
-      opened: true,
-      created: true,
-    },
-    {
-      id: 2,
-      name: "Encuesta 2",
-      candidates: [
-        { id: 11231, name: "Candidato Y", votes: 0, selected: false },
-        { id: 11221, name: "Candidato X", votes: 0, selected: false },
-      ],
-      starts: 0,
-      ends: 0,
-      opened: false,
-      created: true,
-    },
-    {
-      id: 3,
-      name: "Encuesta 3",
-      candidates: [
-        { id: 11231, name: "Candidato A", votes: 0, selected: false },
-        { id: 11221, name: "Candidato B", votes: 0, selected: false },
-      ],
-      starts: 0,
-      ends: 0,
-      opened: false,
-      created: true,
-    },
-  ]);
+  const [surveys, setSurveys] = useState([]);
 
   const [currentSurvey, setCurrentSurvey] = useState({
     id: Date.now(),
@@ -56,24 +21,88 @@ export const SurveyContextProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    // aqui va un fetch
+   fetchSurveys();
   }, [])
   
 
-  const updateSurvey = (extraFields = {}) => {
-    // aqui va un fetch
+  const fetchSurveys = async () => {
+    if (!TESTING) {
+      try {
+        const data = await fetchAPI('/surveys', {}, 'GET');
+        setSurveys(data);
+      } catch (error) {
+        console.error('Error al obtener encuestas:', error);
+      }
+    } else {
+      setSurveys([
+        {
+          id: 1,
+          name: "Encuesta 1",
+          candidates: [
+            { id: 11231, name: "Candidato 1", votes: 0, selected: false },
+            { id: 11221, name: "Candidato 2", votes: 0, selected: false },
+          ],
+          starts: 0,
+          ends: 0,
+          opened: true,
+          created: true,
+        },
+        {
+          id: 2,
+          name: "Encuesta 2",
+          candidates: [
+            { id: 11231, name: "Candidato Y", votes: 0, selected: false },
+            { id: 11221, name: "Candidato X", votes: 0, selected: false },
+          ],
+          starts: 0,
+          ends: 0,
+          opened: false,
+          created: true,
+        },
+        {
+          id: 3,
+          name: "Encuesta 3",
+          candidates: [
+            { id: 11231, name: "Candidato A", votes: 0, selected: false },
+            { id: 11221, name: "Candidato B", votes: 0, selected: false },
+          ],
+          starts: 0,
+          ends: 0,
+          opened: false,
+          created: true,
+        },
+      ]);
+    }
+  };
+
+const updateSurvey = async (extraFields = {}) => {
+  const updatedSurvey = { ...currentSurvey, ...extraFields };
   const exists = surveys.some((s) => s.id === currentSurvey.id);
+
+  if (!TESTING) {
+    try {
+      if (exists) {
+        await fetchAPI(`/surveys/${currentSurvey.id}`, updatedSurvey, 'PUT');
+      } else {
+        const newSurvey = await fetchAPI('/surveys', updatedSurvey, 'POST');
+        updatedSurvey.id = newSurvey.id; 
+      }
+    } catch (error) {
+      console.error('Error al actualizar o crear encuesta:', error);
+      return;
+    }
+  }
 
   if (exists) {
     setSurveys(
       surveys.map((s) =>
-        s.id === currentSurvey.id ? { ...currentSurvey, ...extraFields } : s
+        s.id === currentSurvey.id ? updatedSurvey : s
       )
     );
   } else {
     setSurveys([
       ...surveys,
-      { ...currentSurvey, created: true, ...extraFields },
+      { ...updatedSurvey, created: true },
     ]);
   }
 };
@@ -111,6 +140,7 @@ const openAndSave = () => {
   return (
     <surveyContext.Provider
       value={{
+        fetchSurveys,
         surveys,
         addSurvey,
         removeSurvey,
