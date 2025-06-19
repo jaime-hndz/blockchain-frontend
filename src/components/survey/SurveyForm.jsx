@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { useSurveyContext } from "@/context/SurveyContext";
+import { admin } from "@/helpers/UserProvider";
 
-export const SurveyForm = ({ survey, admin }) => {
+export const SurveyForm = ({ survey }) => {
   const { setCurrentSurvey } = useSurveyContext();
   const [candidates, setCandidates] = React.useState([]);
 
