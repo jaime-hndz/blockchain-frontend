@@ -14,8 +14,7 @@ export const AllSurveys = () => {
   const { surveys} = useSurveyContext();
   
   return (
-    <div>
-      <div>Encuestas: </div>
+    <div className='max-h-[60vh] overflow-y-auto hide-scrollbar-when-idle'>
       <div className='grid grid-cols-4 gap-4'>
       {admin && <NewSurvey />}
       {surveys.map((survey) => (<Survey survey={survey} key={survey.id} />))}

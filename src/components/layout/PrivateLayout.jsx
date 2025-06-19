@@ -19,7 +19,7 @@ export const PrivateLayout = () => {
           Cerrar sesión
         </Button>
       </div>
-      <div className="mex-w-screen min-h-[95vh] bg-blue-100 py-10 px-40">
+      <div className="mex-w-screen h-[95vh] bg-blue-100 py-10 px-40">
         <Outlet />
       </div>
     </>
