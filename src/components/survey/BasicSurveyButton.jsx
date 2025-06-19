@@ -24,9 +24,9 @@ export const BasicSurveyButton = ({
   const { saveChanges, openAndSave, resetCurrentSurvey, currentSurvey } =
     useSurveyContext();
   const basicStyle =
-    "h-30 bg-green-400 relative p-4 rounded-lg hover:bg-green-500 transition-all duration-300 cursor-pointer";
+    "h-30 bg-indigo-900 text-white hover:bg-indigo-800 relative p-4 rounded-lg transition-all duration-300 cursor-pointer";
   const basicStyleNew =
-    "h-30 bg-blue-400 relative border-2  border-blue-800 border-dashed p-4 rounded-lg hover:bg-blue-500 transition-all duration-300 cursor-pointer";
+    "h-30 bg-blue-900 text-blue-300 relative border-2  border-blue-500 border-dashed p-4 rounded-lg hover:bg-blue-800 transition-all duration-300 cursor-pointer";
   return (
     <>
       <Dialog onOpenChange={() => resetCurrentSurvey()}>
@@ -42,7 +42,7 @@ export const BasicSurveyButton = ({
                 <Plus />
               </div>
             ) : (
-              <div>{`${name}`}</div>
+              <div className="text-l font-bold">{`${name}`}</div>
             )}
           </div>
         </DialogTrigger>
