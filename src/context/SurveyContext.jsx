@@ -155,6 +155,8 @@ export const SurveyContextProvider = ({ children }) => {
   };
 
       const voteCandidate = async () => {
+
+        setLoading(true);
         var selected = currentSurvey.candidates.find((c) => c.selected);
 
         if (!selected) {
@@ -170,7 +172,15 @@ export const SurveyContextProvider = ({ children }) => {
         }
 
         console.log("Voting for candidate:", vote);
-        await fetchAPI("/candidato/votar/", vote, "POST");
+        await fetchAPI("/candidato/votar/", vote, "POST").then((res) => {
+          console.log("Vote response:", res);
+          setLoading(false);
+          alert('Voto registrado correctamente')
+        }).catch((error) => {
+          console.error("Error al votar:", error);
+          setLoading(false);
+          alert('Error al registrar el voto')
+        });
       };
     
   const saveChanges = () => {
