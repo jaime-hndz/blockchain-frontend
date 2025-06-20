@@ -1,5 +1,6 @@
-import { checkEndSurveyDate, checkSurveyDates } from "@/helpers/checkSurveyDates";
+// import { checkEndSurveyDate, checkSurveyDates } from "@/helpers/checkSurveyDates";
 import { fetchAPI } from "@/helpers/fetch";
+import { admin, user } from "@/helpers/UserProvider";
 import React, { useContext, useEffect, useState } from "react";
 const TESTING = import.meta.env.VITE_TESTING === "true";
 
@@ -44,8 +45,6 @@ export const SurveyContextProvider = ({ children }) => {
               })),
               starts: s.abre || 0,
               ends: s.cierra || 0,
-              opened: checkSurveyDates(s.abre, s.cierra),
-              enabled: checkEndSurveyDate(s.cierra),
               created: true,
             }))
           );
@@ -114,6 +113,8 @@ export const SurveyContextProvider = ({ children }) => {
         abierto: updatedSurvey.opened || false,
       };
 
+      console.log("Mapped updated survey:", mappedUpdatedSurvey);
+
       try {
         await fetchAPI("/encuesta", mappedUpdatedSurvey, "POST").then((res) => {
           console.log("Encuesta actualizada o creada:", res);
@@ -124,6 +125,8 @@ export const SurveyContextProvider = ({ children }) => {
         return;
       }
     }
+
+
 
     // if (exists) {
     //   setSurveys(
@@ -139,8 +142,32 @@ export const SurveyContextProvider = ({ children }) => {
     // }
   };
 
+      const voteCandidate = async () => {
+        var selected = currentSurvey.candidates.find((c) => c.selected);
+
+        if (!selected) {
+          console.error("No candidate selected for voting.");
+          return;
+        }
+
+        const { cedula } = JSON.parse(user)
+        var vote = {
+          categoria: currentSurvey.name,
+          idPostulante: selected.id,
+          cedula: cedula
+        }
+
+        console.log("Voting for candidate:", vote);
+        await fetchAPI("/candidato/votar/", vote, "POST");
+      };
+    
   const saveChanges = () => {
-    updateSurvey();
+
+    if (admin) {
+      updateSurvey();
+    }else{
+      voteCandidate();
+    }
   };
 
   const openAndSave = async () => {

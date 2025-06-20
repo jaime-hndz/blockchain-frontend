@@ -37,7 +37,7 @@ export const SurveyForm = ({ survey }) => {
           />
         </div>
       )}
-      <h1 className="text-xl font-bold text-gray-800">Fechas</h1>
+      {/* <h1 className="text-xl font-bold text-gray-800">Fechas</h1>
       <Separator className="" />
         <div className="grid gap-3">
           <Label htmlFor="name-1">Inicio</Label>
@@ -66,7 +66,7 @@ export const SurveyForm = ({ survey }) => {
             }}
             disabled={survey.created}
           />
-        </div>
+        </div> */}
       <h1 className="text-xl font-bold text-gray-800">Candidatos</h1>
       <Separator className="" />
       {candidates.map((c, index) =>

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "@mynaui/icons-react";
 import { useSurveyContext } from "@/context/SurveyContext";
-import { admin } from "@/helpers/UserProvider";
+// import { admin } from "@/helpers/UserProvider";
 
 export const BasicSurveyButton = ({
   name,
@@ -21,7 +21,8 @@ export const BasicSurveyButton = ({
   // closeButton,
   newButton = false,
 }) => {
-  const { saveChanges, openAndSave, resetCurrentSurvey, currentSurvey } =
+  // const { saveChanges, openAndSave, resetCurrentSurvey, currentSurvey } =
+  const { saveChanges, resetCurrentSurvey } =
     useSurveyContext();
   const basicStyle =
     "h-30 bg-indigo-900 text-white hover:bg-indigo-800 relative p-4 rounded-lg transition-all duration-300 cursor-pointer";
@@ -56,13 +57,13 @@ export const BasicSurveyButton = ({
             <DialogClose asChild>
               <div className="flex gap-2 justify-end">
                 <Button variant="outline">Cancelar</Button>
-                {!currentSurvey.opened && currentSurvey.created && admin && currentSurvey.enabled && (
+                {/* {!currentSurvey.opened && currentSurvey.created && admin && currentSurvey.enabled && (
                   <Button
                     onClick={openAndSave}
                   >
                     Abrir encuesta
                   </Button>
-                )}
+                )} */}
                 <Button onClick={saveChanges} type="submit">
                   Guardar cambios!
                 </Button>
