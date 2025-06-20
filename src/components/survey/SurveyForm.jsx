@@ -33,10 +33,40 @@ export const SurveyForm = ({ survey }) => {
                 name: e.target.value,
               }));
             }}
-            disabled={survey.opened}
+            disabled={survey.created}
           />
         </div>
       )}
+      <h1 className="text-xl font-bold text-gray-800">Fechas</h1>
+      <Separator className="" />
+        <div className="grid gap-3">
+          <Label htmlFor="name-1">Inicio</Label>
+          <Input
+            id="name-1"
+            name="name"
+            defaultValue={survey.starts}
+            onChange={(e) => {
+              setCurrentSurvey((prev) => ({
+                ...prev,
+                starts: e.target.value,
+              }));
+            }}
+            disabled={survey.created}
+          />
+          <Label htmlFor="name-1">Fin</Label>
+          <Input
+            id="name-1"
+            name="name"
+            defaultValue={survey.ends}
+            onChange={(e) => {
+              setCurrentSurvey((prev) => ({
+                ...prev,
+                ends: e.target.value,
+              }));
+            }}
+            disabled={survey.created}
+          />
+        </div>
       <h1 className="text-xl font-bold text-gray-800">Candidatos</h1>
       <Separator className="" />
       {candidates.map((c, index) =>
@@ -65,9 +95,9 @@ export const SurveyForm = ({ survey }) => {
                     ),
                   }));
                 }}
-                disabled={survey.opened}
+                disabled={survey.created}
               />
-              {survey.opened ? (
+              {survey.created ? (
                 <span>{c.votes}</span>
               ) : (
                 candidates.length > 2 && (
@@ -83,7 +113,7 @@ export const SurveyForm = ({ survey }) => {
                       }));
                     }}
                     variant={"ghost"}
-                    disabled={survey.opened}
+                    disabled={survey.created}
                   >
                     x
                   </Button>
@@ -117,7 +147,7 @@ export const SurveyForm = ({ survey }) => {
         )
       )}
 
-      {!survey.opened && admin && (
+      {!survey.created && admin && (
         <>
           <Button
             onClick={() => {

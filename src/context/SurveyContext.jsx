@@ -1,52 +1,57 @@
+import { checkEndSurveyDate, checkSurveyDates } from "@/helpers/checkSurveyDates";
 import { fetchAPI } from "@/helpers/fetch";
 import React, { useContext, useEffect, useState } from "react";
-const TESTING = import.meta.env.VITE_TESTING === 'true'
+const TESTING = import.meta.env.VITE_TESTING === "true";
 
 const surveyContext = React.createContext({});
 
-export const SurveyContextProvider = ({ children }) => {
-  
-  const [surveys, setSurveys] = useState([]);
-
-  const [currentSurvey, setCurrentSurvey] = useState({
+const defaultCurrentSurvey = {
     id: Date.now(),
     name: "",
     candidates: [
       { id: Date.now() + 1, name: "", votes: 0, selected: false },
-      { id: Date.now() + 2, name: "", votes: 0 , selected: false },
+      { id: Date.now() + 2, name: "", votes: 0, selected: false },
     ],
-    starts: 0,
-    ends: 0,
+    starts: new Date().toISOString(),
+    ends: new Date().toISOString(),
     opened: false,
-  });
+  }
+
+export const SurveyContextProvider = ({ children }) => {
+  const [surveys, setSurveys] = useState([]);
+
+  const [currentSurvey, setCurrentSurvey] = useState(defaultCurrentSurvey);
 
   useEffect(() => {
-   fetchSurveys();
-  }, [])
-  
+    fetchSurveys();
+  }, []);
 
   const fetchSurveys = async () => {
     if (!TESTING) {
       try {
-        await fetchAPI('/encuestas', {}, 'GET').then(res => {
-          console.log(res)
-          setSurveys(res.map(s => ({
-            id: s.id,
-            name: s.nombre,
-            candidates: s.candidatos.map(c => ({
-              id: c.id,
-              name: c.nombre,
-              votes: c.votos || 0,
-              selected: false, 
-            })),
-            opens: s.abre || 0,
-            ends: s.cierra || 0,
-            opened: true,
-            created: true, 
-          })));
+        await fetchAPI("/encuestas", {}, "GET").then((res) => {
+          console.log(res);
+          setSurveys(
+            res.map((s) => ({
+              id: s.id,
+              name: s.nombre,
+              candidates: s.candidatos.map((c) => ({
+                id: c.id,
+                idEncuesta: c.idEncuesta,
+                name: c.nombre,
+                votes: c.votos || 0,
+                selected: false,
+              })),
+              starts: s.abre || 0,
+              ends: s.cierra || 0,
+              opened: checkSurveyDates(s.abre, s.cierra),
+              enabled: checkEndSurveyDate(s.cierra),
+              created: true,
+            }))
+          );
         });
       } catch (error) {
-        console.error('Error al obtener encuestas:', error);
+        console.error("Error al obtener encuestas:", error);
       }
     } else {
       setSurveys([
@@ -90,58 +95,66 @@ export const SurveyContextProvider = ({ children }) => {
     }
   };
 
-const updateSurvey = async (extraFields = {}) => {
-  const updatedSurvey = { ...currentSurvey, ...extraFields };
-  const exists = surveys.some((s) => s.id === currentSurvey.id);
+  const updateSurvey = async (extraFields = {}) => {
+    const updatedSurvey = { ...currentSurvey, ...extraFields };
+    // const exists = surveys.some((s) => s.id === currentSurvey.id);
 
-  if (!TESTING) {
-    try {
-      if (exists) {
-        await fetchAPI(`/surveys/${currentSurvey.id}`, updatedSurvey, 'PUT');
-      } else {
-        const newSurvey = await fetchAPI('/surveys', updatedSurvey, 'POST');
-        updatedSurvey.id = newSurvey.id; 
+    if (!TESTING) {
+      const mappedUpdatedSurvey = {
+        id: updatedSurvey.id,
+        nombre: updatedSurvey.name,
+        candidatos: updatedSurvey.candidates.map((c) => ({
+          id: c.id,
+          idEncuesta: updatedSurvey.id,
+          nombre: c.name,
+          votos: c.votes || 0,
+        })),
+        abre: updatedSurvey.starts,
+        cierra: updatedSurvey.ends,
+        abierto: updatedSurvey.opened || false,
+      };
+
+      try {
+        await fetchAPI("/encuesta", mappedUpdatedSurvey, "POST").then((res) => {
+          console.log("Encuesta actualizada o creada:", res);
+          fetchSurveys();
+        });
+      } catch (error) {
+        console.error("Error al actualizar o crear encuesta:", error);
+        return;
       }
-    } catch (error) {
-      console.error('Error al actualizar o crear encuesta:', error);
-      return;
     }
-  }
 
-  if (exists) {
-    setSurveys(
-      surveys.map((s) =>
-        s.id === currentSurvey.id ? updatedSurvey : s
-      )
-    );
-  } else {
-    setSurveys([
-      ...surveys,
-      { ...updatedSurvey, created: true },
-    ]);
-  }
-};
+    // if (exists) {
+    //   setSurveys(
+    //     surveys.map((s) =>
+    //       s.id === currentSurvey.id ? updatedSurvey : s
+    //     )
+    //   );
+    // } else {
+    //   setSurveys([
+    //     ...surveys,
+    //     { ...updatedSurvey, created: true },
+    //   ]);
+    // }
+  };
 
-const saveChanges = () => {
-  updateSurvey();
-};
+  const saveChanges = () => {
+    updateSurvey();
+  };
 
-const openAndSave = () => {
-  updateSurvey({ opened: true });
-};
-  const resetCurrentSurvey = () => {
-    setCurrentSurvey({
-      id: Date.now(),
-      name: "",
-      candidates: [
-        { id: Date.now() + 1, name: "", votes: 0 },
-        { id: Date.now() + 2, name: "", votes: 0 },
-      ],
-      starts: 0,
-      ends: 0,
-      opened: false,
-      created: false,
+  const openAndSave = async () => {
+    await fetchAPI("/encuesta/abrir/" + currentSurvey.id, {}, "POST").then(
+      (res) => {
+        console.log("Encuesta actualizada o creada:", res);
+        fetchSurveys();
+      }
+    ).catch((error) => {
+      console.error("Error al abrir encuesta:", error);
     });
+  };
+  const resetCurrentSurvey = () => {
+    setCurrentSurvey(defaultCurrentSurvey);
   };
 
   const addSurvey = () => {

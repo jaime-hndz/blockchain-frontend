@@ -33,7 +33,7 @@ export const LoginPage = () => {
           });
       }
 
-      if (cedula === "admin") {
+      if (cedula === "40230927549") {
         localStorage.setItem("admin", JSON.stringify(true));
       }
     } catch (error) {

@@ -56,7 +56,7 @@ export const BasicSurveyButton = ({
             <DialogClose asChild>
               <div className="flex gap-2 justify-end">
                 <Button variant="outline">Cancelar</Button>
-                {!currentSurvey.opened && currentSurvey.created && admin && (
+                {!currentSurvey.opened && currentSurvey.created && admin && currentSurvey.enabled && (
                   <Button
                     onClick={openAndSave}
                   >
