@@ -25,7 +25,6 @@ export const SurveyContextProvider = ({ children }) => {
   const [currentSurvey, setCurrentSurvey] = useState(defaultCurrentSurvey);
 
   useEffect(() => {
-    fetchSurveys();
   }, []);
 
   const fetchSurveys = async () => {
@@ -51,7 +50,6 @@ export const SurveyContextProvider = ({ children }) => {
             }))
           );
           setLoading(false);
-          alert('Encuestas obtenidas correctamente')
         }).catch((error) => {
           setLoading(false);
           alert('Error al obtener encuestas')
