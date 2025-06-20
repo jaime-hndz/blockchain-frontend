@@ -52,7 +52,6 @@ export const SurveyContextProvider = ({ children }) => {
           setLoading(false);
         }).catch((error) => {
           setLoading(false);
-          alert('Error al obtener encuestas')
           console.error("Error al obtener encuestas:", error);
         });
       } catch (error) {
