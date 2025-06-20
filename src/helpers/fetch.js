@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 export const fetchAPI = async (endpoint, options = {}, method = 'GET') => {
   const url = `${API_URL}${endpoint}`;
 
@@ -9,11 +9,9 @@ export const fetchAPI = async (endpoint, options = {}, method = 'GET') => {
     },
   };
 
-  // Agregar body solo si no es GET
   if (method.toUpperCase() !== 'GET') {
     config.body = JSON.stringify(options);
   } else {
-    // Agregar parámetros como query string en GET
     const queryString = new URLSearchParams(options).toString();
     if (queryString) {
       endpoint += `?${queryString}`;

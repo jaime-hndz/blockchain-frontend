@@ -28,8 +28,23 @@ export const SurveyContextProvider = ({ children }) => {
   const fetchSurveys = async () => {
     if (!TESTING) {
       try {
-        const data = await fetchAPI('/surveys', {}, 'GET');
-        setSurveys(data);
+        await fetchAPI('/encuestas', {}, 'GET').then(res => {
+          console.log(res)
+          setSurveys(res.map(s => ({
+            id: s.id,
+            name: s.nombre,
+            candidates: s.candidatos.map(c => ({
+              id: c.id,
+              name: c.nombre,
+              votes: c.votos || 0,
+              selected: false, 
+            })),
+            opens: s.abre || 0,
+            ends: s.cierra || 0,
+            opened: true,
+            created: true, 
+          })));
+        });
       } catch (error) {
         console.error('Error al obtener encuestas:', error);
       }
