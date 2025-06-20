@@ -3,6 +3,7 @@ import { fetchAPI } from "@/helpers/fetch";
 import { admin, user } from "@/helpers/UserProvider";
 import React, { useContext, useEffect, useState } from "react";
 const TESTING = import.meta.env.VITE_TESTING === "true";
+import { Button, Space } from 'antd';
 
 const surveyContext = React.createContext({});
 
@@ -50,8 +51,10 @@ export const SurveyContextProvider = ({ children }) => {
             }))
           );
           setLoading(false);
+          alert('Encuestas obtenidas correctamente')
         }).catch((error) => {
           setLoading(false);
+          alert('Error al obtener encuestas')
           console.error("Error al obtener encuestas:", error);
         });
       } catch (error) {
@@ -105,7 +108,6 @@ export const SurveyContextProvider = ({ children }) => {
     // const exists = surveys.some((s) => s.id === currentSurvey.id);
 
     if (!TESTING) {
-      setLoading(true);
       const mappedUpdatedSurvey = {
         id: updatedSurvey.id,
         nombre: updatedSurvey.name,
@@ -120,16 +122,18 @@ export const SurveyContextProvider = ({ children }) => {
         abierto: updatedSurvey.opened || false,
       };
 
-      console.log("Mapped updated survey:", mappedUpdatedSurvey);
 
       try {
+        setLoading(true);
         await fetchAPI("/encuesta", mappedUpdatedSurvey, "POST").then((res) => {
           console.log("Encuesta actualizada o creada:", res);
           fetchSurveys();
           setLoading(false);
+          alert('Encuesta actualizada o creada correctamente')
         }).catch((error) => {
           console.error("Error al actualizar o crear encuesta:", error);
-          setLoading(false)}) ;
+          setLoading(false)
+          alert('Error al actualizar')}); ;
       } catch (error) {
         console.error("Error al actualizar o crear encuesta:", error);
         setLoading(false);
@@ -204,22 +208,24 @@ export const SurveyContextProvider = ({ children }) => {
     setSurveys((prev) => prev.filter((_, i) => i !== index));
   };
   return (
-    <surveyContext.Provider
-      value={{
-        fetchSurveys,
-        surveys,
-        addSurvey,
-        removeSurvey,
-        currentSurvey,
-        setCurrentSurvey,
-        saveChanges,
-        resetCurrentSurvey,
-        openAndSave,
-        loading
-      }}
-    >
-      {children}
-    </surveyContext.Provider>
+    <>
+      <surveyContext.Provider
+        value={{
+          fetchSurveys,
+          surveys,
+          addSurvey,
+          removeSurvey,
+          currentSurvey,
+          setCurrentSurvey,
+          saveChanges,
+          resetCurrentSurvey,
+          openAndSave,
+          loading
+        }}
+        >
+        {children}
+      </surveyContext.Provider>
+    </>
   );
 };
 

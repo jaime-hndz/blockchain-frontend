@@ -3,14 +3,16 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import logo from "@/assets/logo.svg";
 import { fetchAPI } from "@/helpers/fetch";
+import { useSurveyContext } from "@/context/SurveyContext";
 const TESTING = import.meta.env.VITE_TESTING === "true";
+import { Spin } from "antd";
 
 export const LoginPage = () => {
   const [cedula, setCedula] = useState("");
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
   const [error, setError] = useState("");
-
+  const { loading } = useSurveyContext();
   const handleLogin = async () => {
     if (!cedula.trim()) {
       setError("Por favor, ingresa tu nombre");
@@ -26,9 +28,9 @@ export const LoginPage = () => {
             window.location.href = "/";
           })
           .catch((error) => {
-            console.error("Error en el login:", error);
+            console.error("Error en el login:", error.message);
             setError(
-              "Error al iniciar sesión. Verifica tu conexión o tus credenciales."
+             error.message || "Error al iniciar sesión. Verifica tus credenciales."
             );
           });
       }
@@ -45,7 +47,11 @@ export const LoginPage = () => {
   };
 
   return (
+    
     <div className="bg-gradient-to-br from-blue-500 to-indigo-600 h-screen flex items-center justify-center">
+            {loading && <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+        <Spin className="h-12 w-12 animate-spin text-white" />
+      </div>}
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm space-y-6">
         <img src={logo} alt="Logo" className="w-48 mx-auto mb-4" />
         <div className="space-y-4">
