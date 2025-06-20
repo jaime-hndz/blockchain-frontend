@@ -48,10 +48,6 @@ export const LoginPage = () => {
     <div className="bg-gradient-to-br from-blue-500 to-indigo-600 h-screen flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm space-y-6">
         <img src={logo} alt="Logo" className="w-48 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 text-center">
-          Iniciar sesión
-        </h2>
-
         <div className="space-y-4">
           <Input
             placeholder="Cedula"
@@ -79,7 +75,7 @@ export const LoginPage = () => {
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
         <Button className="w-full" onClick={handleLogin}>
-          Iniciar sesión
+          Ingresar
         </Button>
       </div>
     </div>

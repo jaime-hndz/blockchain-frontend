@@ -124,7 +124,7 @@ export const SurveyForm = ({ survey }) => {
         ) : (
           <div key={c.id} className="grid gap-2">
             <Button
-              className={c.selected ? 'bg-red-500 hover:bg-red-500' : 'bg-gray-400 hover:bg-gray-200'}
+              className={c.selected ? 'bg-blue-500 hover:bg-blue-500' : 'bg-gray-400 hover:bg-gray-200'}
               id={`candidate-${c.id + 1}`}
               name={`candidate-${c.id + 1}`}
               onClick={() => {

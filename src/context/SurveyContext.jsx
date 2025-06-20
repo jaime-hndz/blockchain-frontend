@@ -20,7 +20,7 @@ const defaultCurrentSurvey = {
 
 export const SurveyContextProvider = ({ children }) => {
   const [surveys, setSurveys] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [currentSurvey, setCurrentSurvey] = useState(defaultCurrentSurvey);
 
   useEffect(() => {
@@ -30,6 +30,7 @@ export const SurveyContextProvider = ({ children }) => {
   const fetchSurveys = async () => {
     if (!TESTING) {
       try {
+        setLoading(true);
         await fetchAPI("/encuestas", {}, "GET").then((res) => {
           console.log(res);
           setSurveys(
@@ -48,8 +49,13 @@ export const SurveyContextProvider = ({ children }) => {
               created: true,
             }))
           );
+          setLoading(false);
+        }).catch((error) => {
+          setLoading(false);
+          console.error("Error al obtener encuestas:", error);
         });
       } catch (error) {
+        setLoading(false);
         console.error("Error al obtener encuestas:", error);
       }
     } else {
@@ -99,6 +105,7 @@ export const SurveyContextProvider = ({ children }) => {
     // const exists = surveys.some((s) => s.id === currentSurvey.id);
 
     if (!TESTING) {
+      setLoading(true);
       const mappedUpdatedSurvey = {
         id: updatedSurvey.id,
         nombre: updatedSurvey.name,
@@ -119,9 +126,13 @@ export const SurveyContextProvider = ({ children }) => {
         await fetchAPI("/encuesta", mappedUpdatedSurvey, "POST").then((res) => {
           console.log("Encuesta actualizada o creada:", res);
           fetchSurveys();
-        });
+          setLoading(false);
+        }).catch((error) => {
+          console.error("Error al actualizar o crear encuesta:", error);
+          setLoading(false)}) ;
       } catch (error) {
         console.error("Error al actualizar o crear encuesta:", error);
+        setLoading(false);
         return;
       }
     }
@@ -204,6 +215,7 @@ export const SurveyContextProvider = ({ children }) => {
         saveChanges,
         resetCurrentSurvey,
         openAndSave,
+        loading
       }}
     >
       {children}
