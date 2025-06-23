@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { useSurveyContext } from "@/context/SurveyContext";
 import { admin } from "@/helpers/UserProvider";
+import { GradientPicker } from "../ui/color-picker";
 
 export const SurveyForm = ({ survey }) => {
   const { setCurrentSurvey } = useSurveyContext();
@@ -37,6 +38,7 @@ export const SurveyForm = ({ survey }) => {
           />
         </div>
       )}
+
       {/* <h1 className="text-xl font-bold text-gray-800">Fechas</h1>
       <Separator className="" />
         <div className="grid gap-3">
@@ -73,6 +75,24 @@ export const SurveyForm = ({ survey }) => {
         admin ? (
           <div key={c.id} className="grid gap-3">
             <div className="flex items-center gap-2">
+            <GradientPicker background={c.color ?? ""} setBackground={(e) => {
+                setCandidates((prev) =>
+                    prev.map((candidate) =>
+                      candidate.id === c.id
+                        ? { ...candidate, color: e }
+                        : candidate
+                    )
+                  );
+                  setCurrentSurvey((prev) => ({
+                    ...prev,
+                    candidates: prev.candidates.map((candidate) =>
+                      candidate.id === c.id
+                        ? { ...candidate, color: e }
+                        : candidate
+                    ),
+                  }));
+            }} />
+            
               <Input
                 id={`candidate-${c.id + 1}`}
                 placeholder={`Candidato ${index + 1}`}
@@ -124,7 +144,9 @@ export const SurveyForm = ({ survey }) => {
         ) : (
           <div key={c.id} className="grid gap-2">
             <Button
-              className={c.selected ? 'bg-blue-500 hover:bg-blue-500' : 'bg-gray-400 hover:bg-gray-200'}
+             className={c.selected ? 'border-3 border-dashed border-orange-500' : 'hover:border-3 border-dashed border-orange-500'}
+              style={{
+                backgroundColor:  c.color || "gray",}}
               id={`candidate-${c.id + 1}`}
               name={`candidate-${c.id + 1}`}
               onClick={() => {

@@ -4,6 +4,7 @@ import { admin, user } from "@/helpers/UserProvider";
 import React, { useContext, useEffect, useState } from "react";
 const TESTING = import.meta.env.VITE_TESTING === "true";
 import { Button, Space } from 'antd';
+import { message } from "antd";
 
 const surveyContext = React.createContext({});
 
@@ -23,6 +24,7 @@ export const SurveyContextProvider = ({ children }) => {
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentSurvey, setCurrentSurvey] = useState(defaultCurrentSurvey);
+  const [messageApi, contexHolder] = message.useMessage();
 
   useEffect(() => {
   }, []);
@@ -43,6 +45,7 @@ export const SurveyContextProvider = ({ children }) => {
                 name: c.nombre,
                 votes: c.votos || 0,
                 selected: false,
+                color: c.color || "",
               })),
               starts: s.abre || 0,
               ends: s.cierra || 0,
@@ -53,6 +56,8 @@ export const SurveyContextProvider = ({ children }) => {
         }).catch((error) => {
           setLoading(false);
           console.error("Error al obtener encuestas:", error);
+
+          messageApi.error('He ocurrido un error al obtener las encuestas')
         });
       } catch (error) {
         setLoading(false);
@@ -113,6 +118,7 @@ export const SurveyContextProvider = ({ children }) => {
           idEncuesta: updatedSurvey.id,
           nombre: c.name,
           votos: c.votes || 0,
+          color: c.color || ""
         })),
         abre: updatedSurvey.starts,
         cierra: updatedSurvey.ends,
@@ -126,11 +132,11 @@ export const SurveyContextProvider = ({ children }) => {
           console.log("Encuesta actualizada o creada:", res);
           fetchSurveys();
           setLoading(false);
-          alert('Encuesta actualizada o creada correctamente')
+          messageApi.success('Encuesta actualizada o creada correctamente')
         }).catch((error) => {
           console.error("Error al actualizar o crear encuesta:", error);
           setLoading(false)
-          alert('Error al actualizar')}); ;
+          messageApi.error('Error al actualizar')}); ;
       } catch (error) {
         console.error("Error al actualizar o crear encuesta:", error);
         setLoading(false);
@@ -175,11 +181,11 @@ export const SurveyContextProvider = ({ children }) => {
         await fetchAPI("/candidato/votar/", vote, "POST").then((res) => {
           console.log("Vote response:", res);
           setLoading(false);
-          alert('Voto registrado correctamente')
+          messageApi.success('Voto registrado correctamente')
         }).catch((error) => {
           console.error("Error al votar:", error);
           setLoading(false);
-          alert('Error al registrar el voto')
+          messageApi.error('Error al registrar el voto')
         });
       };
     
@@ -230,6 +236,7 @@ export const SurveyContextProvider = ({ children }) => {
           loading
         }}
         >
+        {contexHolder}
         {children}
       </surveyContext.Provider>
     </>

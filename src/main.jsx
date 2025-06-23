@@ -5,9 +5,7 @@ import { SurveyContextProvider } from './context/SurveyContext'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <SurveyContextProvider>
       <AppRouter />
     </SurveyContextProvider>
-  </StrictMode>,
 )
