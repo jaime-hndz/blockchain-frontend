@@ -91,9 +91,6 @@ export function GradientPicker({
             ) : (
               <Paintbrush className="h-4 w-4" />
             )}
-            <div className="truncate flex-1">
-              {background ? background : ''}
-            </div>
           </div>
         </Button>
       </PopoverTrigger>
