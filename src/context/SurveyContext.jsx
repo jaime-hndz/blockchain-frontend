@@ -185,7 +185,7 @@ export const SurveyContextProvider = ({ children }) => {
         }).catch((error) => {
           console.error("Error al votar:", error);
           setLoading(false);
-          messageApi.error('Error al registrar el voto')
+          messageApi.error('Ya votaste por este candidato o hubo un error al votar')
         });
       };
     

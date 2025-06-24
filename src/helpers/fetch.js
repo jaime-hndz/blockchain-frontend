@@ -1,29 +1,30 @@
+import axios from 'axios';
+
 const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchAPI = async (endpoint, options = {}, method = 'GET') => {
   const url = `${API_URL}${endpoint}`;
 
-  const config = {
-    method: method.toUpperCase(),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+  try {
+    const response = await axios({
+      url,
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(method.toUpperCase() === 'GET'
+        ? { params: options }
+        : { data: options }),
+    });
 
-  if (method.toUpperCase() !== 'GET') {
-    config.body = JSON.stringify(options);
-  } else {
-    const queryString = new URLSearchParams(options).toString();
-    if (queryString) {
-      endpoint += `?${queryString}`;
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status || 'Network';
+      const message = error.response?.data || error.message;
+      throw new Error(`Error ${status}: ${JSON.stringify(message)}`);
+    } else {
+      throw new Error('Unexpected error occurred');
     }
   }
-
-  const response = await fetch(url, config);
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Error ${response.status}: ${error}`);
-  }
-
-  return response.json();
 };

@@ -47,7 +47,7 @@ export const BasicSurveyButton = ({
             )}
           </div>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px]" onOpenAutoFocus={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>{name}</DialogTitle>
             <DialogDescription></DialogDescription>
